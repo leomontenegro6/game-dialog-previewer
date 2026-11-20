@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": ".",
+    "outDir": "test-out",
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/parsers/**/*.ts",
+    "tests/**/*.ts"
+  ]
+}

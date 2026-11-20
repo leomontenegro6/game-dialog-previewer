@@ -1,0 +1,14 @@
+.mmbn-preview {
+  #text-window {
+    transform-origin: top left;
+    image-rendering: pixelated;
+
+    &[data-zoom='2x'] {
+      transform: scale(2);
+    }
+
+    &[data-zoom='3x'] {
+      transform: scale(3);
+    }
+  }
+}

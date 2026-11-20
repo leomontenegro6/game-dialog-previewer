@@ -1,0 +1,131 @@
+{
+  "name": "game-dialog-previewer",
+  "displayName": "Game Dialog Previewer",
+  "description": "Preview game dialogue from supported localization scripts in VS Code",
+  "version": "0.1.0",
+  "publisher": "SolidOne",
+  "engines": {
+    "vscode": "^1.106.0"
+  },
+  "categories": [
+    "Visualization"
+  ],
+  "activationEvents": [
+    "onView:gameDialogPreviewer.preview"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "gameDialogPreviewer",
+          "title": "Game Dialog Previewer",
+          "icon": "assets/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "gameDialogPreviewer": [
+        {
+          "type": "webview",
+          "id": "gameDialogPreviewer.preview",
+          "name": "Game Dialog Previewer"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "gameDialogPreviewer.refresh",
+        "title": "Refresh Game Dialog Preview"
+      }
+    ],
+    "configuration": {
+      "title": "Game Dialog Previewer",
+      "properties": {
+        "gameDialogPreviewer.game": {
+          "type": "string",
+          "default": "mmbn1",
+          "enum": [
+            "mmbn1",
+            "mmbn2",
+            "mmbn3",
+            "mmbn4",
+            "mmbn5",
+            "castlevania",
+            "mzm-vanilla",
+            "mzm-projectzm",
+            "mf-vanilla",
+            "mf-mzmlike"
+          ],
+          "description": "Game or game variant to preview"
+        },
+        "gameDialogPreviewer.mmbnPreviewType": {
+          "type": "string",
+          "default": "mmbn1_dialogues",
+          "enum": [
+            "mmbn1_dialogues",
+            "mmbn1_chips",
+            "mmbn2_dialogues",
+            "mmbn2_dialogues_vwf",
+            "mmbn2_chips",
+            "mmbn2_chips_vwf",
+            "mmbn3_dialogues",
+            "mmbn3_dialogues_vwf",
+            "mmbn3_chips",
+            "mmbn3_chips_vwf",
+            "mmbn4_dialogues",
+            "mmbn4_dialogues_vwf_ptbr",
+            "mmbn4_chips",
+            "mmbn5_dialogues",
+            "mmbn5_dialogues_vwf_ptbr",
+            "mmbn5_chips"
+          ],
+          "description": "Preview layout for MegaMan Battle Network"
+        },
+        "gameDialogPreviewer.zoom": {
+          "type": "number",
+          "default": 2,
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "description": "Preview zoom level"
+        },
+        "gameDialogPreviewer.metroidDialogType": {
+          "type": "string",
+          "default": "twolines",
+          "enum": [
+            "mfdialog",
+            "multilines-black",
+            "multilines-elevator",
+            "multilines-zerosuit",
+            "twolines"
+          ],
+          "description": "Dialog layout for Metroid Fusion and Zero Mission"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "npm run check-types && node esbuild.js",
+    "check-types": "tsc --noEmit",
+    "watch": "node esbuild.js --watch",
+    "vscode:prepublish": "npm run compile",
+    "test": "npm run compile-tests && node --test test-out/tests/parsers.test.js",
+    "compile-tests": "tsc -p tsconfig.test.json"
+  },
+  "dependencies": {
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.2.3",
+    "@types/react-dom": "^19.2.2",
+    "@types/vscode": "^1.106.0",
+    "esbuild": "^0.27.1",
+    "sass": "^1.89.0",
+    "typescript": "^5.9.3"
+  }
+}

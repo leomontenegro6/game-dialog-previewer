@@ -1,0 +1,183 @@
+#text-window {
+  span.block {
+    display: block;
+    width: 256px;
+    height: 80px;
+    background: url('../../../assets/castlevania/block.png');
+    background-repeat: no-repeat;
+    line-height: 1.09;
+    margin-bottom: 5px;
+
+    span.letters {
+      position: relative;
+      top: 28px;
+      left: 19px;
+    }
+
+    span.letter {
+      display: inline-block;
+      width: 8px;
+      height: 12px;
+      background: url('../../../assets/castlevania/font.png');
+      background-position: 0 0;
+    }
+
+    span.letters {
+      span.letter {
+        &.space { width: 4px; background-position: 0 0; }
+        &.exclamation { width: 2px; background-position: -8px -2px; }
+        &.double-quotes { width: 4px; background-position: -16px 0; }
+        &.hashtag { width: 7px; background-position: -24px 0; }
+        &.money-sign { width: 6px; background-position: -32px 0; }
+        &.percent { width: 8px; background-position: -40px 0; }
+        &.ampersand { width: 6px; background-position: -48px 0; }
+        &.quotes { width: 3px; background-position: -56px 0; }
+        &.open-parenthesis { width: 4px; background-position: -64px 0; }
+        &.close-parenthesis { width: 4px; background-position: -72px 0; }
+        &.asterisk { width: 6px; background-position: -80px 0; }
+        &.plus { width: 6px; background-position: -88px 0; }
+        &.comma { width: 3px; background-position: -96px 0; }
+        &.minus { width: 6px; background-position: -104px -1px; }
+        &.dot { width: 3px; background-position: -112px 0; }
+        &.slash { width: 6px; background-position: -120px 0; }
+
+        &.n0 { width: 6px; background-position: 0 -14px; }
+        &.n1 { width: 4px; background-position: -8px -14px; }
+        &.n2 { width: 6px; background-position: -16px -14px; }
+        &.n3 { width: 6px; background-position: -24px -14px; }
+        &.n4 { width: 6px; background-position: -32px -14px; }
+        &.n5 { width: 6px; background-position: -40px -14px; }
+        &.n6 { width: 6px; background-position: -48px -14px; }
+        &.n7 { width: 6px; background-position: -56px -14px; }
+        &.n8 { width: 6px; background-position: -64px -14px; }
+        &.n9 { width: 6px; background-position: -72px -14px; }
+        &.colon { width: 3px; background-position: -80px -14px; }
+        &.semicolon { width: 3px; background-position: -88px -14px; }
+        &.less-than { width: 5px; background-position: -96px -14px; }
+        &.equal { width: 5px; background-position: -104px -14px; }
+        &.greater-than { width: 5px; background-position: -112px -14px; }
+        &.interrogation { width: 6px; background-position: -120px -14px; }
+
+        &.at-sign { width: 9px; background-position: 0 -27px; }
+        &.A { width: 6px; background-position: -8px -27px; }
+        &.B { width: 6px; background-position: -16px -27px; }
+        &.C { width: 6px; background-position: -24px -27px; }
+        &.D { width: 6px; background-position: -32px -27px; }
+        &.E { width: 6px; background-position: -40px -27px; }
+        &.F { width: 6px; background-position: -48px -27px; }
+        &.G { width: 6px; background-position: -56px -27px; }
+        &.H { width: 6px; background-position: -64px -27px; }
+        &.I { width: 4px; background-position: -72px -27px; }
+        &.J { width: 6px; background-position: -80px -27px; }
+        &.K { width: 6px; background-position: -88px -27px; }
+        &.L { width: 6px; background-position: -96px -27px; }
+        &.M { width: 8px; background-position: -104px -27px; }
+        &.N { width: 6px; background-position: -112px -27px; }
+        &.O { width: 6px; background-position: -120px -27px; }
+
+        &.P { width: 6px; background-position: 0 -40px; }
+        &.Q { width: 7px; background-position: -8px -40px; }
+        &.R { width: 6px; background-position: -16px -40px; }
+        &.S { width: 6px; background-position: -24px -40px; }
+        &.T { width: 6px; background-position: -32px -40px; }
+        &.U { width: 6px; background-position: -40px -40px; }
+        &.V { width: 6px; background-position: -48px -40px; }
+        &.W { width: 8px; background-position: -56px -40px; }
+        &.X { width: 6px; background-position: -64px -40px; }
+        &.Y { width: 6px; background-position: -72px -40px; }
+        &.Z { width: 6px; background-position: -80px -40px; }
+        &.open-square-brackets { width: 4px; background-position: -88px -40px; }
+        &.backslash { width: 6px; background-position: -96px -40px; }
+        &.close-square-brackets { width: 4px; background-position: -104px -40px; }
+        &.circumflex { width: 6px; background-position: -112px -40px; }
+        &.underscore { width: 6px; background-position: -120px -40px; }
+
+        &.acute { width: 3px; background-position: 0 -53px; }
+        &.a { width: 6px; background-position: -8px -53px; }
+        &.b { width: 6px; background-position: -16px -53px; }
+        &.c { width: 6px; background-position: -24px -53px; }
+        &.d { width: 6px; background-position: -32px -53px; }
+        &.e { width: 6px; background-position: -40px -53px; }
+        &.f { width: 5px; background-position: -48px -53px; }
+        &.g { width: 6px; background-position: -56px -53px; }
+        &.h { width: 6px; background-position: -64px -53px; }
+        &.i { width: 2px; background-position: -72px -53px; }
+        &.j { width: 6px; background-position: -80px -53px; }
+        &.k { width: 6px; background-position: -88px -53px; }
+        &.l { width: 3px; background-position: -96px -53px; }
+        &.m { width: 8px; background-position: -104px -53px; }
+        &.n { width: 6px; background-position: -112px -53px; }
+        &.o { width: 6px; background-position: -120px -53px; }
+
+        &.p { width: 6px; background-position: 0 -66px; }
+        &.q { width: 6px; background-position: -8px -66px; }
+        &.r { width: 5px; background-position: -16px -66px; }
+        &.s { width: 6px; background-position: -24px -66px; }
+        &.t { width: 5px; background-position: -32px -66px; }
+        &.u { width: 6px; background-position: -40px -66px; }
+        &.v { width: 6px; background-position: -48px -66px; }
+        &.w { width: 8px; background-position: -56px -66px; }
+        &.x { width: 6px; background-position: -64px -66px; }
+        &.y { width: 6px; background-position: -72px -66px; }
+        &.z { width: 6px; background-position: -80px -66px; }
+        &.open-curly-brackets { width: 5px; background-position: -88px -66px; }
+        &.pipe { width: 2px; background-position: -96px -66px; }
+        &.close-curly-brackets { width: 5px; background-position: -104px -66px; }
+        &.tilde { width: 7px; background-position: -112px -66px; }
+        &.middot { width: 3px; background-position: -120px -66px; }
+
+        &.A-grave { width: 6px; background-position: -88px -79px; }
+        &.A-acute { width: 6px; background-position: -96px -79px; }
+        &.A-circumflex { width: 6px; background-position: -112px -79px; }
+        &.A-tilde { width: 6px; background-position: -120x -79px; }
+
+        &.C-cedilla { width: 6px; background-position: -16px -92px; }
+        &.E-acute { width: 6px; background-position: -32px -92px; }
+        &.E-circumflex { width: 6px; background-position: -40px -92px; }
+        &.I-acute { width: 3px; background-position: -64px -92px; }
+        &.O-grave { width: 6px; background-position: -104px -92px; }
+        &.O-acute { width: 6px; background-position: -112px -92px; }
+        &.O-circumflex { width: 6px; background-position: -120px -92px; }
+
+        &.O-tilde { width: 6px; background-position: 0 -105px; }
+        &.U-acute { width: 6px; background-position: -40px -105px; }
+        &.U-diaeresis { width: 6px; background-position: -56px -105px; }
+        &.a-grave { width: 6px; background-position: -80px -105px; }
+        &.a-acute { width: 6px; background-position: -88px -105px; }
+        &.a-circumflex { width: 6px; background-position: -96px -105px; }
+        &.a-tilde { width: 6px; background-position: -104px -105px; }
+
+        &.c-cedilla { width: 6px; background-position: -8px -118px; }
+        &.e-acute { width: 6px; background-position: -24px -118px; }
+        &.e-circumflex { width: 6px; background-position: -32px -118px; }
+        &.i-acute { width: 3px; background-position: -56px -118px; }
+        &.o-grave { width: 6px; background-position: -96px -118px; }
+        &.o-acute { width: 6px; background-position: -104px -118px; }
+        &.o-circumflex { width: 6px; background-position: -112px -118px; }
+        &.o-tilde { width: 6px; background-position: -120px -118px; }
+
+        &.u-acute { width: 6px; background-position: -32px -131px; }
+        &.u-diaeresis { width: 6px; background-position: -48px -131px; }
+
+        &.unknown {
+          width: 8px !important;
+          background-position: 0 0 !important;
+          margin-right: 1px;
+          position: relative;
+          &:after {
+            background: darkseagreen;
+            color: black;
+            content: 'X';
+            position: absolute;
+            top: 1px;
+            left: 0;
+            border: 1px solid black;
+            font-size: 10px;
+          }
+
+        }
+
+      }
+    }
+  }
+}

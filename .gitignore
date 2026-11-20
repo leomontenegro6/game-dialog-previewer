@@ -1,0 +1,6 @@
+node_modules/
+dist/
+test-out/
+*.vsix
+webview/styles/**/*.css
+webview/styles/**/*.css.map

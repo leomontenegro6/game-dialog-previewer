@@ -1,0 +1,43 @@
+.app-shell {
+  padding: 10px;
+  font-family: var(--vscode-font-family);
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: var(--vscode-descriptionForeground);
+    font-size: 11px;
+  }
+
+  select {
+    max-width: 100%;
+    background: var(--vscode-dropdown-background);
+    color: var(--vscode-dropdown-foreground);
+    border: 1px solid var(--vscode-dropdown-border);
+    padding: 3px 4px;
+  }
+
+  .preview-message {
+    padding: 10px;
+    color: var(--vscode-descriptionForeground);
+    font-size: 12px;
+    font-style: italic;
+    overflow-wrap: anywhere;
+
+    small {
+      display: block;
+      margin-top: 6px;
+      font-style: normal;
+    }
+  }
+}
+
