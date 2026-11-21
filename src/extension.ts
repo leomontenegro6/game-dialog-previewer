@@ -2,46 +2,68 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { parseCastlevaniaBlock } from './parsers/castlevania';
 import { parseMetroidBlock } from './parsers/metroid';
+import { parsePokemonBlock } from './parsers/pokemon';
 import { parseMmbnBlock } from './parsers/mmbn';
 import { PreviewerProvider } from './previewerProvider';
-import { GameId, PreviewConfiguration, PreviewData, gameIds, isGameId } from './types';
+import { GameId, PokemonPreviewType, PreviewConfiguration, PreviewData, gameIds, isGameId } from './types';
 
 const defaultConfiguration: PreviewConfiguration = {
   game: 'mmbn1',
   mmbnPreviewType: 'mmbn1_dialogues',
   zoom: 2,
-  metroidDialogType: 'twolines'
+  metroidDialogType: 'twolines',
+  pokemonPreviewType: 'pokemon_gen2_asm'
 };
 
 function getConfiguration(): PreviewConfiguration {
   const settings = vscode.workspace.getConfiguration('gameDialogPreviewer');
   const selectedGame = settings.get<unknown>('game');
-  const normalizedGame = selectedGame === 'cdos' ? 'castlevania' : selectedGame;
+  const normalizedGame = selectedGame === 'cdos'
+    ? 'castlevania'
+    : selectedGame === 'pokemon-gen1' || selectedGame === 'pokemon-gen2'
+      ? 'pokemon'
+      : selectedGame;
   const previewType = settings.get<string>('mmbnPreviewType', defaultConfiguration.mmbnPreviewType);
   const zoom = settings.get<number>('zoom', defaultConfiguration.zoom);
   const dialogType = settings.get<string>('metroidDialogType', defaultConfiguration.metroidDialogType);
+  const pokemonPreviewType = settings.get<PokemonPreviewType>(
+    'pokemonPreviewType',
+    defaultConfiguration.pokemonPreviewType
+  );
 
   return {
     game: isGameId(normalizedGame) ? normalizedGame : defaultConfiguration.game,
     mmbnPreviewType: previewType,
     zoom: zoom === 1 || zoom === 2 || zoom === 3 ? zoom : defaultConfiguration.zoom,
-    metroidDialogType: dialogType
+    metroidDialogType: dialogType,
+    pokemonPreviewType: pokemonPreviewType === 'pokemon_gen2_lua'
+      ? 'pokemon_gen2_lua'
+      : defaultConfiguration.pokemonPreviewType
   };
 }
 
-function getFileExpectation(game: GameId): { extension: string; expected: string } {
+function getFileExpectation(
+  game: GameId,
+  pokemonPreviewType: PokemonPreviewType
+): { extension: string; expected: string } {
   if (game.startsWith('mmbn')) {
     return { extension: '.tpl', expected: '.tpl or .tlp' };
   }
   if (game === 'castlevania') {
     return { extension: '.csv', expected: '.csv' };
   }
+  if (game === 'pokemon') {
+    return pokemonPreviewType === 'pokemon_gen2_lua'
+      ? { extension: '.lua', expected: '.lua' }
+      : { extension: '.asm', expected: '.asm' };
+  }
   return { extension: '.asm', expected: '.asm' };
 }
 
 function createPreview(
   editor: vscode.TextEditor | undefined,
-  game: GameId
+  game: GameId,
+  pokemonPreviewType: PokemonPreviewType
 ): PreviewData {
   if (!editor) {
     return { status: 'no-editor', game, strings: [] };
@@ -49,10 +71,11 @@ function createPreview(
 
   const fileName = path.basename(editor.document.fileName);
   const extension = path.extname(fileName).toLowerCase();
-  const expectation = getFileExpectation(game);
+  const expectation = getFileExpectation(game, pokemonPreviewType);
   const isMmbnFile = game.startsWith('mmbn') && (extension === '.tpl' || extension === '.tlp');
+  const isPokemonFile = game === 'pokemon' && extension === expectation.extension;
 
-  if (!isMmbnFile && extension !== expectation.extension) {
+  if (!isMmbnFile && !isPokemonFile && extension !== expectation.extension) {
     return {
       status: 'unsupported-file',
       game,
@@ -85,6 +108,22 @@ function createPreview(
     };
   }
 
+  if (game === 'pokemon') {
+    const block = parsePokemonBlock(
+      lines,
+      currentLine,
+      pokemonPreviewType === 'pokemon_gen2_lua' ? 'lua' : 'asm'
+    );
+    return {
+      status: block.blockName && block.windows.length > 0 ? 'ready' : 'no-block',
+      game,
+      fileName,
+      blockName: block.blockName ?? undefined,
+      strings: block.windows.flatMap((window) => window.lines),
+      pokemonWindows: block.windows
+    };
+  }
+
   const block = parseMetroidBlock(lines, currentLine);
   return {
     status: block.blockName && block.strings.length > 0 ? 'ready' : 'no-block',
@@ -97,11 +136,12 @@ function createPreview(
 
 function isConfigurationKey(
   value: string
-): value is 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType' {
+): value is 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType' | 'pokemonPreviewType' {
   return value === 'game'
     || value === 'mmbnPreviewType'
     || value === 'zoom'
-    || value === 'metroidDialogType';
+    || value === 'metroidDialogType'
+    || value === 'pokemonPreviewType';
 }
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -137,7 +177,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     refreshTimer = setTimeout(() => {
       configuration = getConfiguration();
-      provider.updatePreview(createPreview(editor, configuration.game));
+      provider.updatePreview(createPreview(editor, configuration.game, configuration.pokemonPreviewType));
     }, 100);
   };
 

@@ -4,6 +4,7 @@
   "description": "Preview game dialogue from supported localization scripts in VS Code",
   "version": "0.1.0",
   "publisher": "SolidOne",
+  "repository": "https://github.com/leomontenegro6/game-dialog-previewer",
   "engines": {
     "vscode": "^1.106.0"
   },
@@ -55,7 +56,8 @@
             "mzm-vanilla",
             "mzm-projectzm",
             "mf-vanilla",
-            "mf-mzmlike"
+            "mf-mzmlike",
+            "pokemon"
           ],
           "description": "Game or game variant to preview"
         },
@@ -103,6 +105,19 @@
             "twolines"
           ],
           "description": "Dialog layout for Metroid Fusion and Zero Mission"
+        },
+        "gameDialogPreviewer.pokemonPreviewType": {
+          "type": "string",
+          "default": "pokemon_gen2_asm",
+          "enum": [
+            "pokemon_gen2_asm",
+            "pokemon_gen2_lua"
+          ],
+          "enumDescriptions": [
+            "Gen2 CWF Assembly (.asm)",
+            "Gen2 CWF Lua (.lua)"
+          ],
+          "description": "Preview format for Pokemon dialogue"
         }
       }
     }

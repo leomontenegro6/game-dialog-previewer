@@ -28,9 +28,11 @@ const metroidDialogTypes = [
   'twolines'
 ];
 
+const pokemonPreviewTypes = ['pokemon_gen2_asm', 'pokemon_gen2_lua'];
+
 interface ConfigurationMessage {
   type: 'updateConfig';
-  key: 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType';
+  key: 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType' | 'pokemonPreviewType';
   value: unknown;
 }
 
@@ -46,7 +48,8 @@ function isConfigurationMessage(value: unknown): value is ConfigurationMessage {
   return value.key === 'game'
     || value.key === 'mmbnPreviewType'
     || value.key === 'zoom'
-    || value.key === 'metroidDialogType';
+    || value.key === 'metroidDialogType'
+    || value.key === 'pokemonPreviewType';
 }
 
 function isValidValue(key: ConfigurationMessage['key'], value: unknown): boolean {
@@ -59,6 +62,8 @@ function isValidValue(key: ConfigurationMessage['key'], value: unknown): boolean
       return value === 1 || value === 2 || value === 3;
     case 'metroidDialogType':
       return typeof value === 'string' && metroidDialogTypes.includes(value);
+    case 'pokemonPreviewType':
+      return typeof value === 'string' && pokemonPreviewTypes.includes(value);
   }
 }
 
@@ -154,7 +159,8 @@ export class PreviewerProvider implements vscode.WebviewViewProvider {
       ...['mmbn1', 'mmbn2', 'mmbn3', 'mmbn4', 'mmbn5'].map((game) =>
         resource('webview', 'styles', 'mmbn', game, 'preview.css')
       ),
-      resource('webview', 'styles', 'castlevania', 'preview.css')
+      resource('webview', 'styles', 'castlevania', 'preview.css'),
+      resource('webview', 'styles', 'pokemon', 'preview.css')
     ];
     const links = styleUris
       .map((uri) => `<link rel="stylesheet" href="${uri}">`)

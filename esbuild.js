@@ -17,7 +17,7 @@ async function buildStyles() {
   });
   fs.writeFileSync('dist/styles.css', webviewStyles.css);
 
-  for (const game of ['mmbn', 'metroid']) {
+  for (const game of ['mmbn', 'metroid', 'pokemon']) {
     const source = path.join('webview', 'styles', game, 'preview.scss');
     const output = path.join('webview', 'styles', game, 'preview.css');
     fs.writeFileSync(output, sass.compile(source, {

@@ -1,0 +1,89 @@
+.pokemon-preview {
+  width: 160px;
+  image-rendering: pixelated;
+  font-size: 0;
+}
+
+.pokemon-window {
+  width: 160px;
+}
+
+.pokemon-window-start,
+.pokemon-window-end {
+  width: 160px;
+  height: 8px;
+  background-repeat: no-repeat;
+}
+
+.pokemon-window-start {
+  background-image: url('../../../assets/pokemon/gen2/window_start.png');
+}
+
+.pokemon-window-end {
+  background-image: url('../../../assets/pokemon/gen2/window_end.png');
+}
+
+.pokemon-window-body {
+  position: relative;
+  width: 160px;
+  height: 32px;
+  padding: 8px 8px 0;
+  box-sizing: border-box;
+  background-color: #fff;
+  background-image: url('../../../assets/pokemon/gen2/window_side_grid.png');
+  background-repeat: repeat-y;
+}
+
+.pokemon-window-body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  background-image: url('../../../assets/pokemon/gen2/window_side_grid.png');
+  background-repeat: repeat-y;
+}
+
+.pokemon-line {
+  width: 144px;
+  height: 8px;
+  line-height: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pokemon-line + .pokemon-line,
+.pokemon-continuation + .pokemon-line {
+  margin-top: 8px;
+}
+
+.pokemon-char {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-image: url('../../../assets/pokemon/gen2/font.png');
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+.pokemon-placeholder {
+  background-color: #d00000;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.pokemon-continuation {
+  position: absolute;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  color: #000;
+  font-family: sans-serif;
+  font-size: 8px;
+  line-height: 8px;
+  text-align: center;
+  z-index: 1;
+  background: white;
+}

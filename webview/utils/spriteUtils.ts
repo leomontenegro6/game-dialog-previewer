@@ -22,6 +22,9 @@ function getAssetsBase(): string {
   return document.getElementById('root')?.getAttribute('data-assets-base') ?? '';
 }
 
+export const getPokemonAssetUri = (fileName: string): string =>
+  `${getAssetsBase()}/pokemon/gen2/${fileName}`;
+
 export const getFontSpriteUri = (gameType: string): string => {
   const gamePath = gameType.replace('-', '/');
   return `${getAssetsBase()}/metroid/${gamePath}/font-sprite.png`;

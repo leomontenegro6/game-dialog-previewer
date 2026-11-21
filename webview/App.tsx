@@ -1,6 +1,7 @@
 import React from 'react';
 import { DialogPreview } from './components/Preview/DialogPreview';
 import { CastlevaniaPreview } from './components/Preview/CastlevaniaPreview';
+import { PokemonPreview } from './components/Preview/PokemonPreview';
 import { MmbnPreview } from './components/Preview/MmbnPreview';
 import { usePreviewState } from './usePreviewState';
 
@@ -14,7 +15,8 @@ const gameOptions = [
   { value: 'mzm-vanilla', label: 'Metroid Zero Mission (Vanilla)' },
   { value: 'mzm-projectzm', label: 'Metroid Zero Mission (ProjectZM)' },
   { value: 'mf-vanilla', label: 'Metroid Fusion (Vanilla)' },
-  { value: 'mf-mzmlike', label: 'Metroid Fusion (MZM-like)' }
+  { value: 'mf-mzmlike', label: 'Metroid Fusion (MZM-like)' },
+  { value: 'pokemon', label: 'Pokémon' }
 ];
 
 const mmbnPreviewOptions: Record<string, Array<{ value: string; label: string }>> = {
@@ -69,6 +71,7 @@ export const App: React.FC = () => {
   const game = configuration.game;
   const isMmbn = game.startsWith('mmbn');
   const isMetroid = game.startsWith('mzm-') || game.startsWith('mf-');
+  const isPokemon = game === 'pokemon';
   const previewOptions = mmbnPreviewOptions[game] ?? [];
   const selectedMmbnPreviewType = previewOptions.some(
     (option) => option.value === configuration.mmbnPreviewType
@@ -130,7 +133,20 @@ export const App: React.FC = () => {
           </label>
         )}
 
-        {game !== 'castlevania' && (
+        {isPokemon && (
+          <label className="control-group">
+            <span>Preview type</span>
+            <select
+              value={configuration.pokemonPreviewType}
+              onChange={(event) => updateConfiguration('pokemonPreviewType', event.target.value)}
+            >
+              <option value="pokemon_gen2_asm">Gen2 CWF Assembly</option>
+              <option value="pokemon_gen2_lua">Gen2 CWF Lua</option>
+            </select>
+          </label>
+        )}
+
+      {game !== 'castlevania' && (
           <label className="control-group">
             <span>Zoom</span>
             <select
@@ -169,6 +185,14 @@ export const App: React.FC = () => {
             zoom={configuration.zoom}
           />
         </div>
+      )}
+      {preview.status === 'ready' && isPokemon && (
+        <PokemonPreview
+          windows={preview.pokemonWindows ?? (preview.strings.length > 0
+            ? [{ lines: preview.strings.slice(0, 2), continuation: false }]
+            : [])}
+          zoom={configuration.zoom}
+        />
       )}
 
       {preview.status !== 'ready' && (

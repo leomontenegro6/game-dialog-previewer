@@ -8,10 +8,13 @@ export const gameIds = [
   'mzm-vanilla',
   'mzm-projectzm',
   'mf-vanilla',
-  'mf-mzmlike'
+  'mf-mzmlike',
+  'pokemon'
 ] as const;
 
 export type GameId = typeof gameIds[number];
+
+export type PokemonPreviewType = 'pokemon_gen2_asm' | 'pokemon_gen2_lua';
 
 export type PreviewStatus = 'no-editor' | 'unsupported-file' | 'no-block' | 'ready';
 
@@ -22,6 +25,12 @@ export interface PreviewData {
   blockName?: string;
   strings: string[];
   expectedExtension?: string;
+  pokemonWindows?: PokemonWindow[];
+}
+
+export interface PokemonWindow {
+  lines: string[];
+  continuation: boolean;
 }
 
 export interface PreviewConfiguration {
@@ -29,6 +38,7 @@ export interface PreviewConfiguration {
   mmbnPreviewType: string;
   zoom: number;
   metroidDialogType: string;
+  pokemonPreviewType: PokemonPreviewType;
 }
 
 export function isGameId(value: unknown): value is GameId {
