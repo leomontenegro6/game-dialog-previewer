@@ -54,9 +54,7 @@
             "mmbn5",
             "castlevania",
             "mzm-vanilla",
-            "mzm-projectzm",
             "mf-vanilla",
-            "mf-mzmlike",
             "pokemon"
           ],
           "description": "Game or game variant to preview"
@@ -105,6 +103,21 @@
             "twolines"
           ],
           "description": "Dialog layout for Metroid Fusion and Zero Mission"
+        },
+        "gameDialogPreviewer.metroidFontType": {
+          "type": "string",
+          "default": "vanilla",
+          "enum": [
+            "vanilla",
+            "projectzm",
+            "mzmlike"
+          ],
+          "enumDescriptions": [
+            "Original game font",
+            "ProjectZM font for Zero Mission",
+            "MZM-like font for Fusion"
+          ],
+          "description": "Font variant for Metroid previews"
         },
         "gameDialogPreviewer.pokemonPreviewType": {
           "type": "string",

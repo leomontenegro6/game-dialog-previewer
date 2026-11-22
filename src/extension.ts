@@ -5,13 +5,14 @@ import { parseMetroidBlock } from './parsers/metroid';
 import { parsePokemonBlock } from './parsers/pokemon';
 import { parseMmbnBlock } from './parsers/mmbn';
 import { PreviewerProvider } from './previewerProvider';
-import { GameId, PokemonPreviewType, PreviewConfiguration, PreviewData, gameIds, isGameId } from './types';
+import { GameId, MetroidFontType, PokemonPreviewType, PreviewConfiguration, PreviewData, gameIds, isGameId } from './types';
 
 const defaultConfiguration: PreviewConfiguration = {
   game: 'mmbn1',
   mmbnPreviewType: 'mmbn1_dialogues',
   zoom: 2,
   metroidDialogType: 'twolines',
+  metroidFontType: 'vanilla',
   pokemonPreviewType: 'pokemon_cwf_og'
 };
 
@@ -37,10 +38,22 @@ function getConfiguration(): PreviewConfiguration {
     ? 'castlevania'
     : selectedGame === 'pokemon-gen1' || selectedGame === 'pokemon-gen2'
       ? 'pokemon'
+      : selectedGame === 'mzm-projectzm'
+        ? 'mzm-vanilla'
+        : selectedGame === 'mf-mzmlike'
+          ? 'mf-vanilla'
       : selectedGame;
   const previewType = settings.get<string>('mmbnPreviewType', defaultConfiguration.mmbnPreviewType);
   const zoom = settings.get<number>('zoom', defaultConfiguration.zoom);
   const dialogType = settings.get<string>('metroidDialogType', defaultConfiguration.metroidDialogType);
+  const savedMetroidFontType = settings.get<MetroidFontType>('metroidFontType', defaultConfiguration.metroidFontType);
+  const metroidFontType: MetroidFontType = selectedGame === 'mzm-projectzm'
+    ? 'projectzm'
+    : selectedGame === 'mf-mzmlike'
+      ? 'mzmlike'
+      : savedMetroidFontType === 'projectzm' || savedMetroidFontType === 'mzmlike'
+        ? savedMetroidFontType
+        : 'vanilla';
   const pokemonPreviewType = normalizePokemonPreviewType(settings.get<unknown>('pokemonPreviewType'));
 
   return {
@@ -48,6 +61,7 @@ function getConfiguration(): PreviewConfiguration {
     mmbnPreviewType: previewType,
     zoom: zoom === 1 || zoom === 2 || zoom === 3 ? zoom : defaultConfiguration.zoom,
     metroidDialogType: dialogType,
+    metroidFontType,
     pokemonPreviewType
   };
 }
@@ -147,11 +161,12 @@ function createPreview(
 
 function isConfigurationKey(
   value: string
-): value is 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType' | 'pokemonPreviewType' {
+): value is 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType' | 'metroidFontType' | 'pokemonPreviewType' {
   return value === 'game'
     || value === 'mmbnPreviewType'
     || value === 'zoom'
     || value === 'metroidDialogType'
+    || value === 'metroidFontType'
     || value === 'pokemonPreviewType';
 }
 

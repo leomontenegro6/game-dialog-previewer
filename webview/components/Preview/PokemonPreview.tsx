@@ -74,7 +74,7 @@ const PokemonLine: React.FC<{ text: string; vwf: boolean }> = ({ text, vwf }) =>
 
   return (
     <div className="pokemon-line">
-      {Array.from(normalized.text.slice(0, 18)).map((character, index) => {
+      {Array.from(normalized.text).map((character, index) => {
         const position = POKEMON_GEN2_CHAR_MAP[character];
         const highlighted = normalized.highlighted[index];
 

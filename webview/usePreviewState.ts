@@ -9,6 +9,7 @@ const defaults: PreviewConfiguration = {
   mmbnPreviewType: 'mmbn1_dialogues',
   zoom: 2,
   metroidDialogType: 'twolines',
+  metroidFontType: 'vanilla',
   pokemonPreviewType: 'pokemon_cwf_og'
 };
 

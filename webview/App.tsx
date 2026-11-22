@@ -12,11 +12,16 @@ const gameOptions = [
   { value: 'mmbn4', label: 'MegaMan Battle Network 4' },
   { value: 'mmbn5', label: 'MegaMan Battle Network 5' },
   { value: 'castlevania', label: 'Castlevania: Dawn of Sorrow' },
-  { value: 'mzm-vanilla', label: 'Metroid Zero Mission (Vanilla)' },
-  { value: 'mzm-projectzm', label: 'Metroid Zero Mission (ProjectZM)' },
-  { value: 'mf-vanilla', label: 'Metroid Fusion (Vanilla)' },
-  { value: 'mf-mzmlike', label: 'Metroid Fusion (MZM-like)' },
-  { value: 'pokemon', label: 'Pokémon' }
+  { value: 'mzm-vanilla', label: 'Metroid Zero Mission' },
+  { value: 'mf-vanilla', label: 'Metroid Fusion' },
+  { value: 'pokemon', label: 'Pokémon RBY / GSC' }
+];
+
+const gameGroups = [
+  { label: 'MMBN', options: gameOptions.slice(0, 5) },
+  { label: 'Castlevania', options: gameOptions.slice(5, 6) },
+  { label: 'Metroid', options: gameOptions.slice(6, 8) },
+  { label: 'Pokemon', options: gameOptions.slice(8) }
 ];
 
 const mmbnPreviewOptions: Record<string, Array<{ value: string; label: string }>> = {
@@ -72,6 +77,12 @@ export const App: React.FC = () => {
   const isMmbn = game.startsWith('mmbn');
   const isMetroid = game.startsWith('mzm-') || game.startsWith('mf-');
   const isPokemon = game === 'pokemon';
+  const selectedMetroidFontType = game === 'mzm-vanilla'
+    ? configuration.metroidFontType === 'projectzm' ? 'projectzm' : 'vanilla'
+    : configuration.metroidFontType === 'mzmlike' ? 'mzmlike' : 'vanilla';
+  const metroidGameType = game === 'mzm-vanilla'
+    ? selectedMetroidFontType === 'projectzm' ? 'mzm-projectzm' : 'mzm-vanilla'
+    : selectedMetroidFontType === 'mzmlike' ? 'mf-mzmlike' : 'mf-vanilla';
   const previewOptions = mmbnPreviewOptions[game] ?? [];
   const selectedMmbnPreviewType = previewOptions.some(
     (option) => option.value === configuration.mmbnPreviewType
@@ -81,6 +92,12 @@ export const App: React.FC = () => {
 
   const changeGame = (newGame: string) => {
     updateConfiguration('game', newGame);
+    if (
+      (newGame === 'mzm-vanilla' && configuration.metroidFontType === 'mzmlike')
+      || (newGame === 'mf-vanilla' && configuration.metroidFontType === 'projectzm')
+    ) {
+      updateConfiguration('metroidFontType', 'vanilla');
+    }
     const newPreviewOptions = mmbnPreviewOptions[newGame];
     if (newPreviewOptions && !newPreviewOptions.some(
       (option) => option.value === configuration.mmbnPreviewType
@@ -99,8 +116,12 @@ export const App: React.FC = () => {
         <label className="control-group">
           <span>Game</span>
           <select value={game} onChange={(event) => changeGame(event.target.value)}>
-            {gameOptions.map((option) => (
-              <option value={option.value} key={option.value}>{option.label}</option>
+            {gameGroups.map((group) => (
+              <optgroup label={group.label} key={group.label}>
+                {group.options.map((option) => (
+                  <option value={option.value} key={option.value}>{option.label}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>
@@ -133,6 +154,28 @@ export const App: React.FC = () => {
           </label>
         )}
 
+        {isMetroid && (
+          <label className="control-group">
+            <span>Font type</span>
+            <select
+              value={selectedMetroidFontType}
+              onChange={(event) => updateConfiguration('metroidFontType', event.target.value)}
+            >
+              {game === 'mzm-vanilla' ? (
+                <>
+                  <option value="vanilla">Vanilla</option>
+                  <option value="projectzm">ProjectZM</option>
+                </>
+              ) : (
+                <>
+                  <option value="vanilla">Vanilla</option>
+                  <option value="mzmlike">MZM-like</option>
+                </>
+              )}
+            </select>
+          </label>
+        )}
+
         {isPokemon && (
           <label className="control-group">
             <span>Preview type</span>
@@ -140,8 +183,8 @@ export const App: React.FC = () => {
               value={configuration.pokemonPreviewType}
               onChange={(event) => updateConfiguration('pokemonPreviewType', event.target.value)}
             >
-              <option value="pokemon_cwf_og">CWF OG (Gen1/Gen2)</option>
-              <option value="pokemon_vwf_gen1recomp">VWF gen1recomp (Gen1/Gen2)</option>
+              <option value="pokemon_cwf_og">CWF (Original)</option>
+              <option value="pokemon_vwf_gen1recomp">VWF (gen1recomp)</option>
             </select>
           </label>
         )}
@@ -180,7 +223,7 @@ export const App: React.FC = () => {
               strings: preview.strings,
               timestamp: ''
             }}
-            gameType={game}
+            gameType={metroidGameType}
             dialogType={configuration.metroidDialogType}
             zoom={configuration.zoom}
           />

@@ -22,6 +22,8 @@ export type PokemonPreviewType =
   | 'pokemon_gen2_vwf_asm'
   | 'pokemon_gen2_vwf_lua';
 
+export type MetroidFontType = 'vanilla' | 'projectzm' | 'mzmlike';
+
 export type PreviewStatus = 'no-editor' | 'unsupported-file' | 'no-block' | 'ready';
 
 export interface PreviewData {
@@ -45,6 +47,7 @@ export interface PreviewConfiguration {
   mmbnPreviewType: string;
   zoom: number;
   metroidDialogType: string;
+  metroidFontType: MetroidFontType;
   pokemonPreviewType: PokemonPreviewType;
 }
 

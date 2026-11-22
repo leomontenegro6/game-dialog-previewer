@@ -39,7 +39,7 @@ const pokemonPreviewTypes = [
 
 interface ConfigurationMessage {
   type: 'updateConfig';
-  key: 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType' | 'pokemonPreviewType';
+  key: 'game' | 'mmbnPreviewType' | 'zoom' | 'metroidDialogType' | 'metroidFontType' | 'pokemonPreviewType';
   value: unknown;
 }
 
@@ -56,6 +56,7 @@ function isConfigurationMessage(value: unknown): value is ConfigurationMessage {
     || value.key === 'mmbnPreviewType'
     || value.key === 'zoom'
     || value.key === 'metroidDialogType'
+    || value.key === 'metroidFontType'
     || value.key === 'pokemonPreviewType';
 }
 
@@ -69,6 +70,8 @@ function isValidValue(key: ConfigurationMessage['key'], value: unknown): boolean
       return value === 1 || value === 2 || value === 3;
     case 'metroidDialogType':
       return typeof value === 'string' && metroidDialogTypes.includes(value);
+    case 'metroidFontType':
+      return value === 'vanilla' || value === 'projectzm' || value === 'mzmlike';
     case 'pokemonPreviewType':
       return typeof value === 'string' && pokemonPreviewTypes.includes(value);
   }
