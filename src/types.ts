@@ -37,6 +37,7 @@ export interface PreviewData {
 export interface PokemonWindow {
   lines: string[];
   continuation: boolean;
+  invalidLineBreak?: boolean;
 }
 
 export interface PreviewConfiguration {

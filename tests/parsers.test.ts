@@ -43,6 +43,37 @@ test('Pokemon ASM parser groups line and cont tags into windows', () => {
   });
 });
 
+test('Pokemon parser marks line breaks after the second line as invalid', () => {
+  const lines = [
+    'Text_Invalid:',
+    '  text "First line"',
+    '  line "Second line"',
+    '  line "Third line"',
+    '  done'
+  ];
+
+  assert.deepEqual(parsePokemonBlock(lines, 3, 'asm'), {
+    blockName: 'Text_Invalid',
+    windows: [{
+      lines: ['First line', 'Second line', 'Third line'],
+      continuation: false,
+      invalidLineBreak: true
+    }]
+  });
+});
+
+test('Pokemon parser marks line breaks inside continuation windows as invalid', () => {
+  const lines = ['["example"] = "First\\nSecond\\011Third\\nFourth",'];
+
+  assert.deepEqual(parsePokemonBlock(lines, 0, 'lua'), {
+    blockName: 'example',
+    windows: [
+      { lines: ['First', 'Second'], continuation: false },
+      { lines: ['Third', 'Fourth'], continuation: true, invalidLineBreak: true }
+    ]
+  });
+});
+
 test('Pokemon Lua parser converts escaped control tags', () => {
   const lines = ['["example"] = "First\\nSecond\\011Continued\\012Last",'];
   assert.deepEqual(parsePokemonBlock(lines, 0, 'lua'), {

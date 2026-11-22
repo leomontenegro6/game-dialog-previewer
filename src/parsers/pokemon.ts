@@ -57,7 +57,14 @@ function buildWindows(tokens: Token[]): PokemonWindow[] {
   }
 
   pushLine();
-  return windows.filter((window) => window.lines.some((line) => line.length > 0));
+  return windows
+    .filter((window) => window.lines.some((line) => line.length > 0))
+    .map((window) => {
+      const maxLines = window.continuation ? 1 : 2;
+      return window.lines.length > maxLines
+        ? { ...window, invalidLineBreak: true }
+        : window;
+    });
 }
 
 function decodeQuotedText(value: string): string {

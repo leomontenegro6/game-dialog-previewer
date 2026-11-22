@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { PokemonPreviewType, PokemonWindow } from '../../../src/types';
 import { POKEMON_GEN2_CHAR_MAP } from '../../charmaps/pokemon/gen2';
 import { getPokemonAssetUri } from '../../utils/spriteUtils';
@@ -119,10 +119,37 @@ function groupPokemonWindows(windows: PokemonWindow[]): PokemonWindow[][] {
 const PokemonWindow: React.FC<{ windows: PokemonWindow[]; vwf: boolean }> = ({ windows, vwf }) => {
   const lineCount = windows.reduce((count, window) => count + window.lines.slice(0, 2).length, 0);
   const bodyHeight = Math.max(32, lineCount * 16);
+  const windowRef = useRef<HTMLDivElement>(null);
+  const [overflowRight, setOverflowRight] = useState(false);
+  const invalidLineBreak = windows.some((window) => window.invalidLineBreak);
   let precedingLineCount = 0;
 
+  useEffect(() => {
+    const body = windowRef.current?.querySelector<HTMLElement>('.pokemon-window-body');
+    if (!body) {
+      return;
+    }
+
+    const updateOverflow = () => {
+      const overflowing = Array.from(body.querySelectorAll<HTMLElement>('.pokemon-line'))
+        .some((line) => line.scrollWidth > line.clientWidth + 1);
+      setOverflowRight(overflowing);
+    };
+
+    updateOverflow();
+    const observer = new ResizeObserver(updateOverflow);
+    observer.observe(body);
+    body.querySelectorAll('.pokemon-line').forEach((line) => observer.observe(line));
+    void document.fonts?.ready.then(updateOverflow);
+
+    return () => observer.disconnect();
+  }, [vwf, windows]);
+
   return (
-    <div className="pokemon-window">
+    <div
+      ref={windowRef}
+      className={`pokemon-window${overflowRight ? ' pokemon-window-overflow-right' : ''}${invalidLineBreak ? ' pokemon-window-invalid-break' : ''}`}
+    >
       <div
         className="pokemon-window-start"
         style={{ backgroundImage: `url("${getPokemonAssetUri('window_start.png')}")` }}
