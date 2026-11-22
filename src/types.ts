@@ -14,7 +14,13 @@ export const gameIds = [
 
 export type GameId = typeof gameIds[number];
 
-export type PokemonPreviewType = 'pokemon_gen2_asm' | 'pokemon_gen2_lua';
+export type PokemonPreviewType =
+  | 'pokemon_cwf_og'
+  | 'pokemon_vwf_gen1recomp'
+  | 'pokemon_gen2_asm'
+  | 'pokemon_gen2_lua'
+  | 'pokemon_gen2_vwf_asm'
+  | 'pokemon_gen2_vwf_lua';
 
 export type PreviewStatus = 'no-editor' | 'unsupported-file' | 'no-block' | 'ready';
 

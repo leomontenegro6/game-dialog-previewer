@@ -12,8 +12,23 @@ const defaultConfiguration: PreviewConfiguration = {
   mmbnPreviewType: 'mmbn1_dialogues',
   zoom: 2,
   metroidDialogType: 'twolines',
-  pokemonPreviewType: 'pokemon_gen2_asm'
+  pokemonPreviewType: 'pokemon_cwf_og'
 };
+
+function normalizePokemonPreviewType(value: unknown): PokemonPreviewType {
+  switch (value) {
+    case 'pokemon_vwf_gen1recomp':
+    case 'pokemon_gen2_vwf_asm':
+    case 'pokemon_gen2_vwf_lua':
+      return 'pokemon_vwf_gen1recomp';
+    case 'pokemon_cwf_og':
+    case 'pokemon_gen2_asm':
+    case 'pokemon_gen2_lua':
+      return 'pokemon_cwf_og';
+    default:
+      return defaultConfiguration.pokemonPreviewType;
+  }
+}
 
 function getConfiguration(): PreviewConfiguration {
   const settings = vscode.workspace.getConfiguration('gameDialogPreviewer');
@@ -26,19 +41,14 @@ function getConfiguration(): PreviewConfiguration {
   const previewType = settings.get<string>('mmbnPreviewType', defaultConfiguration.mmbnPreviewType);
   const zoom = settings.get<number>('zoom', defaultConfiguration.zoom);
   const dialogType = settings.get<string>('metroidDialogType', defaultConfiguration.metroidDialogType);
-  const pokemonPreviewType = settings.get<PokemonPreviewType>(
-    'pokemonPreviewType',
-    defaultConfiguration.pokemonPreviewType
-  );
+  const pokemonPreviewType = normalizePokemonPreviewType(settings.get<unknown>('pokemonPreviewType'));
 
   return {
     game: isGameId(normalizedGame) ? normalizedGame : defaultConfiguration.game,
     mmbnPreviewType: previewType,
     zoom: zoom === 1 || zoom === 2 || zoom === 3 ? zoom : defaultConfiguration.zoom,
     metroidDialogType: dialogType,
-    pokemonPreviewType: pokemonPreviewType === 'pokemon_gen2_lua'
-      ? 'pokemon_gen2_lua'
-      : defaultConfiguration.pokemonPreviewType
+    pokemonPreviewType
   };
 }
 
@@ -53,9 +63,7 @@ function getFileExpectation(
     return { extension: '.csv', expected: '.csv' };
   }
   if (game === 'pokemon') {
-    return pokemonPreviewType === 'pokemon_gen2_lua'
-      ? { extension: '.lua', expected: '.lua' }
-      : { extension: '.asm', expected: '.asm' };
+    return { extension: '.asm', expected: '.asm or .lua' };
   }
   return { extension: '.asm', expected: '.asm' };
 }
@@ -73,9 +81,12 @@ function createPreview(
   const extension = path.extname(fileName).toLowerCase();
   const expectation = getFileExpectation(game, pokemonPreviewType);
   const isMmbnFile = game.startsWith('mmbn') && (extension === '.tpl' || extension === '.tlp');
-  const isPokemonFile = game === 'pokemon' && extension === expectation.extension;
+  const isPokemonFile = game === 'pokemon' && (extension === '.asm' || extension === '.lua');
+  const isOtherSupportedFile = !game.startsWith('mmbn')
+    && game !== 'pokemon'
+    && extension === expectation.extension;
 
-  if (!isMmbnFile && !isPokemonFile && extension !== expectation.extension) {
+  if (!isMmbnFile && !isPokemonFile && !isOtherSupportedFile) {
     return {
       status: 'unsupported-file',
       game,
@@ -112,7 +123,7 @@ function createPreview(
     const block = parsePokemonBlock(
       lines,
       currentLine,
-      pokemonPreviewType === 'pokemon_gen2_lua' ? 'lua' : 'asm'
+      extension === '.lua' ? 'lua' : 'asm'
     );
     return {
       status: block.blockName && block.windows.length > 0 ? 'ready' : 'no-block',

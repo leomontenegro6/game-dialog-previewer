@@ -108,14 +108,14 @@
         },
         "gameDialogPreviewer.pokemonPreviewType": {
           "type": "string",
-          "default": "pokemon_gen2_asm",
+          "default": "pokemon_cwf_og",
           "enum": [
-            "pokemon_gen2_asm",
-            "pokemon_gen2_lua"
+            "pokemon_cwf_og",
+            "pokemon_vwf_gen1recomp"
           ],
           "enumDescriptions": [
-            "Gen2 CWF Assembly (.asm)",
-            "Gen2 CWF Lua (.lua)"
+            "CWF original Pokemon font (Gen1/Gen2; .asm or .lua)",
+            "VWF Fusion Pixel font (Gen1/Gen2; .asm or .lua)"
           ],
           "description": "Preview format for Pokemon dialogue"
         }

@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Fusion Pixel 10px Prop latin';
+  src: url('../../../assets/pokemon/gen2/fusion_pixel_font/fusion-pixel-10px-proportional-latin.ttf') format('truetype');
+  font-display: block;
+}
+
 .pokemon-preview {
   width: 160px;
   image-rendering: pixelated;
@@ -48,9 +54,21 @@
 .pokemon-line {
   width: 144px;
   height: 8px;
-  line-height: 8px;
+  line-height: 4px;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.pokemon-vwf-preview .pokemon-line {
+  color: #000;
+  font-family: 'Fusion Pixel 10px Prop latin', monospace;
+  font-size: 10px;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.pokemon-vwf-placeholder {
+  color: #d00000;
 }
 
 .pokemon-line + .pokemon-line,

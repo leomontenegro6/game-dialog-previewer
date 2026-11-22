@@ -1,5 +1,5 @@
 import React from 'react';
-import type { PokemonWindow } from '../../../src/types';
+import type { PokemonPreviewType, PokemonWindow } from '../../../src/types';
 import { POKEMON_GEN2_CHAR_MAP } from '../../charmaps/pokemon/gen2';
 import { getPokemonAssetUri } from '../../utils/spriteUtils';
 
@@ -34,14 +34,50 @@ export function normalizeText(text: string): string {
   return normalizeTextWithHighlights(text).text;
 }
 
-const PokemonLine: React.FC<{ text: string }> = ({ text }) => {
+const PokemonLine: React.FC<{ text: string; vwf: boolean }> = ({ text, vwf }) => {
   const normalized = normalizeTextWithHighlights(text);
+
+  if (vwf) {
+    const characters = Array.from(normalized.text);
+    const parts: React.ReactNode[] = [];
+    let plainText = '';
+    let highlightedText = '';
+    let highlighted = false;
+
+    const flush = () => {
+      if (plainText) {
+        parts.push(plainText);
+        plainText = '';
+      }
+      if (highlightedText) {
+        parts.push(<span className="pokemon-vwf-placeholder" key={parts.length}>{highlightedText}</span>);
+        highlightedText = '';
+      }
+    };
+
+    characters.forEach((character, index) => {
+      const characterHighlighted = normalized.highlighted[index];
+      if (characterHighlighted !== highlighted) {
+        flush();
+        highlighted = characterHighlighted;
+      }
+      if (highlighted) {
+        highlightedText += character;
+      } else {
+        plainText += character;
+      }
+    });
+    flush();
+
+    return <div className="pokemon-line">{parts}</div>;
+  }
 
   return (
     <div className="pokemon-line">
       {Array.from(normalized.text.slice(0, 18)).map((character, index) => {
         const position = POKEMON_GEN2_CHAR_MAP[character];
         const highlighted = normalized.highlighted[index];
+
         const positionValue = position
           ? `${-(position.x * 8)}px ${-(position.y * 8)}px`
           : undefined;
@@ -80,7 +116,7 @@ function groupPokemonWindows(windows: PokemonWindow[]): PokemonWindow[][] {
   }, []);
 }
 
-const PokemonWindow: React.FC<{ windows: PokemonWindow[] }> = ({ windows }) => {
+const PokemonWindow: React.FC<{ windows: PokemonWindow[]; vwf: boolean }> = ({ windows, vwf }) => {
   const lineCount = windows.reduce((count, window) => count + window.lines.slice(0, 2).length, 0);
   const bodyHeight = Math.max(32, lineCount * 16);
   let precedingLineCount = 0;
@@ -105,7 +141,7 @@ const PokemonWindow: React.FC<{ windows: PokemonWindow[] }> = ({ windows }) => {
                 </div>
               )}
               {lines.map((line, lineIndex) => (
-                <PokemonLine text={line} key={`${windowIndex}-${lineIndex}`} />
+                <PokemonLine text={line} vwf={vwf} key={`${windowIndex}-${lineIndex}`} />
               ))}
             </React.Fragment>
           );
@@ -119,8 +155,23 @@ const PokemonWindow: React.FC<{ windows: PokemonWindow[] }> = ({ windows }) => {
   );
 };
 
-export const PokemonPreview: React.FC<{ windows: PokemonWindow[]; zoom: number }> = ({ windows, zoom }) => (
-  <div className="pokemon-preview" style={{ transform: `scale(${zoom})`, transformOrigin: 'top left' }}>
-    {groupPokemonWindows(windows).map((group, index) => <PokemonWindow windows={group} key={index} />)}
-  </div>
-);
+export const PokemonPreview: React.FC<{
+  windows: PokemonWindow[];
+  previewType: PokemonPreviewType;
+  zoom: number;
+}> = ({ windows, previewType, zoom }) => {
+  const vwf = previewType === 'pokemon_vwf_gen1recomp'
+    || previewType === 'pokemon_gen2_vwf_asm'
+    || previewType === 'pokemon_gen2_vwf_lua';
+
+  return (
+    <div
+      className={`pokemon-preview${vwf ? ' pokemon-vwf-preview' : ''}`}
+      style={{ transform: `scale(${zoom})`, transformOrigin: 'top left' }}
+    >
+      {groupPokemonWindows(windows).map((group, index) => (
+        <PokemonWindow windows={group} vwf={vwf} key={index} />
+      ))}
+    </div>
+  );
+};

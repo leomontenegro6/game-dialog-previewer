@@ -140,8 +140,8 @@ export const App: React.FC = () => {
               value={configuration.pokemonPreviewType}
               onChange={(event) => updateConfiguration('pokemonPreviewType', event.target.value)}
             >
-              <option value="pokemon_gen2_asm">Gen2 CWF Assembly</option>
-              <option value="pokemon_gen2_lua">Gen2 CWF Lua</option>
+              <option value="pokemon_cwf_og">CWF OG (Gen1/Gen2)</option>
+              <option value="pokemon_vwf_gen1recomp">VWF gen1recomp (Gen1/Gen2)</option>
             </select>
           </label>
         )}
@@ -191,6 +191,7 @@ export const App: React.FC = () => {
           windows={preview.pokemonWindows ?? (preview.strings.length > 0
             ? [{ lines: preview.strings.slice(0, 2), continuation: false }]
             : [])}
+          previewType={configuration.pokemonPreviewType}
           zoom={configuration.zoom}
         />
       )}

@@ -9,7 +9,7 @@ const defaults: PreviewConfiguration = {
   mmbnPreviewType: 'mmbn1_dialogues',
   zoom: 2,
   metroidDialogType: 'twolines',
-  pokemonPreviewType: 'pokemon_gen2_asm'
+  pokemonPreviewType: 'pokemon_cwf_og'
 };
 
 export function usePreviewState() {
