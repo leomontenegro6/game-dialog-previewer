@@ -74,6 +74,19 @@ test('Pokemon parser marks line breaks inside continuation windows as invalid', 
   });
 });
 
+test('Pokemon parser rejects continuation as the first line separator', () => {
+  const lines = ['["example"] = "First\\011Second\\011Third",'];
+
+  assert.deepEqual(parsePokemonBlock(lines, 0, 'lua'), {
+    blockName: 'example',
+    windows: [
+      { lines: ['First'], continuation: false },
+      { lines: ['Second'], continuation: true, invalidLineBreak: true },
+      { lines: ['Third'], continuation: true }
+    ]
+  });
+});
+
 test('Pokemon Lua parser converts escaped control tags', () => {
   const lines = ['["example"] = "First\\nSecond\\011Continued\\012Last",'];
   assert.deepEqual(parsePokemonBlock(lines, 0, 'lua'), {

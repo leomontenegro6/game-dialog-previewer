@@ -121,7 +121,16 @@ const PokemonWindow: React.FC<{ windows: PokemonWindow[]; vwf: boolean }> = ({ w
   const bodyHeight = Math.max(32, lineCount * 16);
   const windowRef = useRef<HTMLDivElement>(null);
   const [overflowRight, setOverflowRight] = useState(false);
-  const invalidLineBreak = windows.some((window) => window.invalidLineBreak);
+  const invalidLineBreak = windows.some((window, index) => {
+    const maxLines = window.continuation ? 1 : 2;
+    const isFirstContinuationSeparator = index === 1
+      && window.continuation
+      && windows[0].lines.length < 2;
+
+    return window.invalidLineBreak
+      || window.lines.length > maxLines
+      || isFirstContinuationSeparator;
+  });
   let precedingLineCount = 0;
 
   useEffect(() => {

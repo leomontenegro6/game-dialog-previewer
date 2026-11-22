@@ -59,11 +59,12 @@ function buildWindows(tokens: Token[]): PokemonWindow[] {
   pushLine();
   return windows
     .filter((window) => window.lines.some((line) => line.length > 0))
-    .map((window) => {
+    .map((window, index, parsedWindows) => {
       const maxLines = window.continuation ? 1 : 2;
-      return window.lines.length > maxLines
-        ? { ...window, invalidLineBreak: true }
-        : window;
+      const invalidLineBreak = window.lines.length > maxLines
+        || (window.continuation && index === 1 && parsedWindows[0].lines.length < 2);
+
+      return invalidLineBreak ? { ...window, invalidLineBreak: true } : window;
     });
 }
 
